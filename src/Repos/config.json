@@ -1,0 +1,56 @@
+{
+  "Theme": "Custom",
+  "Themes": [
+    {
+      "Custom": {
+        "ColorSchemes": [
+          {
+            "TopLevel": {
+              "Normal":    { "Foreground": "Gray",        "Background": "Black" },
+              "Focus":     { "Foreground": "White",       "Background": "Blue" },
+              "HotNormal": { "Foreground": "BrightGreen", "Background": "Black" },
+              "HotFocus":  { "Foreground": "Cyan",        "Background": "Black" },
+              "Disabled":  { "Foreground": "Black",       "Background": "Gray" }
+            }
+          },
+          {
+            "Base": {
+              "Normal":    { "Foreground": "Gray",         "Background": "Black" },
+              "Focus":     { "Foreground": "BrightYellow", "Background": "DarkGray" },
+              "HotNormal": { "Foreground": "BrightYellow", "Background": "Black" },
+              "HotFocus":  { "Foreground": "Cyan",         "Background": "Black" },
+              "Disabled":  { "Foreground": "Black",        "Background": "Gray" }
+            }
+          },
+          {
+            "Dialog": {
+              "Normal":    { "Foreground": "Gray",       "Background": "Black" },
+              "Focus":     { "Foreground": "BrightCyan", "Background": "Black" },
+              "HotNormal": { "Foreground": "White",      "Background": "Black" },
+              "HotFocus":  { "Foreground": "White",      "Background": "Black" },
+              "Disabled":  { "Foreground": "Black",      "Background": "Gray" }
+            }
+          },
+          {
+            "Menu": {
+              "Normal":    { "Foreground": "White", "Background": "DarkGray" },
+              "Focus":     { "Foreground": "White", "Background": "Black" },
+              "HotNormal": { "Foreground": "Gray",  "Background": "DarkGray" },
+              "HotFocus":  { "Foreground": "White", "Background": "Black" },
+              "Disabled":  { "Foreground": "Gray",  "Background": "Black" }
+            }
+          },
+          {
+            "Error": {
+              "Normal":    { "Foreground": "BrightYellow", "Background": "DarkGray" },
+              "Focus":     { "Foreground": "DarkGray",     "Background": "BrightYellow" },
+              "HotNormal": { "Foreground": "BrightYellow", "Background": "DarkGray" },
+              "HotFocus":  { "Foreground": "Red",          "Background": "BrightYellow" },
+              "Disabled":  { "Foreground": "DarkGray",     "Background": "Gray" }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

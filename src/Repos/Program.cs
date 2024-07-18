@@ -10,9 +10,6 @@ public static class Program
     {
         Application.Init();
 
-        ConfigurationManager.Themes!.Theme = "Dark";
-        ConfigurationManager.Apply();
-
         IRepoManager repoManager = new RepoManager();
         using (var window = new MainWindow(repoManager))
             Application.Run(window);
