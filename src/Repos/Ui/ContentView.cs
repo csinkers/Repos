@@ -1,4 +1,6 @@
-﻿namespace Repos.Ui;
+﻿using Repos.Core;
+
+namespace Repos.Ui;
 
 public sealed class ContentView
 {
@@ -65,7 +67,7 @@ public sealed class ContentView
     r - refresh selected repo
     R - refresh all repos
     */
-    public ContentView(IRepoManager manager)
+    public ContentView(RepoManager manager)
     {
 /*
         var branchPane = new BranchView(repoPane)

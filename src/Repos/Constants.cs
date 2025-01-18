@@ -7,5 +7,6 @@ public static class Constants
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "ReposTool"
     );
+
     public static readonly string ConfigPath = Path.Combine(DataDir, SettingsJson);
 }

@@ -1,29 +1,34 @@
-﻿using System.Collections.ObjectModel;
-using Repos.Model;
+﻿using Repos.Model;
+using Repos.Ui;
 
 namespace Repos.Core;
 
-public class RepoManager : IRepoManager
+public class RepoManager
 {
     readonly Lock _syncRoot = new();
-    readonly Config _config;
-    readonly Dictionary<string, RepoStatus> _db = new();
+    readonly Dictionary<string, Repo> _repos;
+    TreeNode? _tree;
 
-    public ObservableCollection<string> Repos { get; }
-
-    public RepoManager()
+    public TreeNode Tree
     {
-        _config = ConfigLoader.Load(Constants.ConfigPath);
-        Repos = _config.Repos;
+        get
+        {
+            lock (_repos)
+                return _tree ??= TreeNode.Build(_repos.Values);
+        }
     }
 
+    public RepoManager(Config config) => _repos = config.Repos.ToDictionary(x => x, x => new Repo(x));
+
+    void Dirty() => _tree = null;
     public void AddRepo(string path)
     {
         lock (_syncRoot)
         {
-            if (!_config.Repos.Contains(path))
-                _config.Repos.Add(path);
+            if (!_repos.ContainsKey(path))
+                _repos.Add(path, new Repo(path));
 
+            Dirty();
             SaveConfig();
         }
     }
@@ -32,23 +37,36 @@ public class RepoManager : IRepoManager
     {
         lock (_syncRoot)
         {
-            _config.Repos.Remove(path);
+            _repos.Remove(path);
+            Dirty();
             SaveConfig();
         }
     }
 
-    public void RefreshRepo(string path) { }
-
-    public void FetchRepo(string path) { }
-
-    public void RefreshAll() { }
-
-    public void FetchAll() { }
-
-    public RepoStatus? GetStatus(string path)
+    public async Task RefreshAll(CancellationToken ct)
     {
-        return null;
+        var tasks = new List<Task>();
+        lock (_repos)
+            foreach (var repo in _repos.Values)
+                tasks.Add(repo.Refresh(ct));
+
+        await Task.WhenAll(tasks);
     }
 
-    void SaveConfig() => ConfigLoader.Save(_config, Constants.ConfigPath);
+    public async Task FetchAll(CancellationToken ct)
+    {
+        var tasks = new List<Task>();
+        lock (_repos)
+            foreach (var repo in _repos.Values)
+                tasks.Add(repo.Fetch(ct));
+
+        await Task.WhenAll(tasks);
+    }
+
+    void SaveConfig()
+    {
+        var config = new Config();
+        config.Repos.AddRange(_repos.Values.Select(x => x.Path));
+        ConfigLoader.Save(config, Constants.ConfigPath);
+    }
 }
