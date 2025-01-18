@@ -3,7 +3,7 @@ using Repos.Ui;
 
 namespace Repos.Core;
 
-public class RepoManager
+public class RepoManager : IDisposable
 {
     readonly Lock _syncRoot = new();
     readonly Dictionary<string, Repo> _repos;
@@ -37,7 +37,9 @@ public class RepoManager
     {
         lock (_syncRoot)
         {
-            _repos.Remove(path);
+            if (_repos.Remove(path, out var repo))
+                repo.Dispose();
+
             Dirty();
             SaveConfig();
         }
@@ -68,5 +70,16 @@ public class RepoManager
         var config = new Config();
         config.Repos.AddRange(_repos.Values.Select(x => x.Path));
         ConfigLoader.Save(config, Constants.ConfigPath);
+    }
+
+    public void Dispose()
+    {
+        lock (_repos)
+        {
+            foreach (var repo in _repos.Values)
+                repo.Dispose();
+
+            _repos.Clear();
+        }
     }
 }
