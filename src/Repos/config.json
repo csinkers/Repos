@@ -6,7 +6,7 @@
         "ColorSchemes": [
           {
             "TopLevel": {
-              "Normal":    { "Foreground": "Gray",        "Background": "Black" },
+              "Normal":    { "Foreground": "White",       "Background": "Black" },
               "Focus":     { "Foreground": "White",       "Background": "Blue" },
               "HotNormal": { "Foreground": "BrightGreen", "Background": "Black" },
               "HotFocus":  { "Foreground": "Cyan",        "Background": "Black" },
@@ -15,7 +15,7 @@
           },
           {
             "Base": {
-              "Normal":    { "Foreground": "Gray",         "Background": "Black" },
+              "Normal":    { "Foreground": "White",         "Background": "Black" },
               "Focus":     { "Foreground": "BrightYellow", "Background": "DarkGray" },
               "HotNormal": { "Foreground": "BrightYellow", "Background": "Black" },
               "HotFocus":  { "Foreground": "Cyan",         "Background": "Black" },
@@ -24,7 +24,7 @@
           },
           {
             "Dialog": {
-              "Normal":    { "Foreground": "Gray",       "Background": "Black" },
+              "Normal":    { "Foreground": "White",       "Background": "Black" },
               "Focus":     { "Foreground": "BrightCyan", "Background": "Black" },
               "HotNormal": { "Foreground": "White",      "Background": "Black" },
               "HotFocus":  { "Foreground": "White",      "Background": "Black" },
@@ -35,7 +35,7 @@
             "Menu": {
               "Normal":    { "Foreground": "White", "Background": "DarkGray" },
               "Focus":     { "Foreground": "White", "Background": "Black" },
-              "HotNormal": { "Foreground": "Gray",  "Background": "DarkGray" },
+              "HotNormal": { "Foreground": "BrightGreen",  "Background": "DarkGray" },
               "HotFocus":  { "Foreground": "White", "Background": "Black" },
               "Disabled":  { "Foreground": "Gray",  "Background": "Black" }
             }

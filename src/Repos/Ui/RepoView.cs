@@ -25,8 +25,8 @@ public sealed class RepoView : View
     public RepoView(IRepoManager manager)
     {
         _manager = manager ?? throw new ArgumentNullException(nameof(manager));
-        _tree = new TreeView<ModelObject> { Width = Dim.Fill(), Height = Dim.Fill(), };
 
+        _tree = new TreeView<ModelObject> { Width = Dim.Fill(), Height = Dim.Fill(), };
         var root = new DirNode();
         foreach (var repo in manager.Repos)
         {

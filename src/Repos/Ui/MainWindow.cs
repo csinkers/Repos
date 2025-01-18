@@ -6,8 +6,11 @@ public sealed class MainWindow : Toplevel
 {
     public MainWindow(IRepoManager manager)
     {
-        var contentView = new ContentView(manager) { Width = Dim.Fill(), Height = Dim.Fill() - 1 };
-        var helpBar = new StatusBar { };
+        var contentView = new ContentView(manager) { Width = Dim.Fill(), Height = Dim.Fill(1) };
+
+        var helpBar = new StatusBar([
+            new Shortcut(new Key((KeyCode)'?'), "help", () => { })
+        ]);
         Add(contentView, helpBar);
     }
 }

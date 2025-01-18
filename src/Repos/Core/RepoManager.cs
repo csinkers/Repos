@@ -5,7 +5,7 @@ namespace Repos.Core;
 
 public class RepoManager : IRepoManager
 {
-    readonly object _syncRoot = new();
+    readonly Lock _syncRoot = new();
     readonly Config _config;
     readonly Dictionary<string, RepoStatus> _db = new();
 

@@ -6,6 +6,40 @@ public sealed class ContentView : View
 {
     /*
 
+    General:
+    Rounded borders
+    Black background
+    Light gray text
+
+    Highlights in green
+    Secondary in light blue
+    Status bar - light blue
+    Command: <key> | Command2: <key> | ... | Keybindings: ? | Cancel: <esc>
+
+    List view
+    Columns:
+    #. Name
+    #. Unstaged + Staged files
+    #. Current branch w/ ahead/behind
+    #. Ahead/behind counts for remote branches
+    #. Local branches without a remote
+    #. Full path
+
+    Ordering: Alpha, first favourites then the rest.
+
+    Keybinds:
+
+    <esc>: Quit
+    ?: Show help
+    n: New repo
+    d: Remove repo
+    r: Refresh repo
+    F5: Refresh all
+    f: Fast forward
+    F: Fast forward all
+    p: Pull
+    P: Pull all
+
     +----+----+------+
     |    |    |      |
     |    |    |      |
@@ -24,10 +58,11 @@ public sealed class ContentView : View
         var repoPane = new RepoView(manager)
         {
             Height = Dim.Fill(),
-            Width = Dim.Percent(33),
+            Width = Dim.Fill(),
             BorderStyle = LineStyle.Rounded,
         };
-
+        Add(repoPane);
+/*
         var branchPane = new BranchView(repoPane)
         {
             X = Pos.Right(repoPane),
@@ -45,5 +80,6 @@ public sealed class ContentView : View
         };
 
         Add(repoPane, branchPane, detailsPane);
+*/
     }
 }
