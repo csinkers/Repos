@@ -90,6 +90,7 @@ public abstract record TreeNode
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
+            ImGui.SetNextItemOpen(true, ImGuiCond.FirstUseEver);
             bool open = ImGui.TreeNodeEx(Name);
             ImGui.TableNextColumn();
             ImGui.TableNextColumn();
