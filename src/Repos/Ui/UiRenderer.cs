@@ -15,7 +15,7 @@ public sealed class UiRenderer : IDisposable
     readonly GraphicsDevice _gd;
     DateTime _lastFrame = DateTime.Now;
 
-    public static void Run(Action drawAction)
+    public static void Run(Action<Input> drawAction)
     {
         using var ui = new UiRenderer();
         ui.RunInner(drawAction);
@@ -85,11 +85,14 @@ public sealed class UiRenderer : IDisposable
         io.FontGlobalScale = 2.0f;
     }
 
-    void RunInner(Action drawCallback)
+    void RunInner(Action<Input> drawCallback)
     {
+        var inputWrapper = new Input();
         while (_window.Exists)
         {
             var input = _window.PumpEvents();
+            inputWrapper.Snapshot = input;
+
             if (!_window.Exists)
                 break;
 
@@ -102,7 +105,7 @@ public sealed class UiRenderer : IDisposable
             ImGui.PushFont(_font);
             ImGui.Begin("Repos", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
 
-            drawCallback();
+            drawCallback(inputWrapper);
 
             ImGui.End();
             ImGui.PopFont();

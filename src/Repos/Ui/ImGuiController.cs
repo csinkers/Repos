@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using ImGuiNET;
 using Veldrid;
 
-namespace Repos
+namespace Repos.Ui
 {
     /// <summary>
     /// A modified version of Veldrid.ImGui's ImGuiRenderer.
@@ -12,13 +12,13 @@ namespace Repos
     /// </summary>
     public class ImGuiController : IDisposable
     {
-        const IntPtr FontAtlasId = 1;
+        const nint FontAtlasId = 1;
         readonly Vector2 _scaleFactor = Vector2.One;
 
         // Image trackers
         readonly Dictionary<TextureView, ResourceSetInfo> _setsByView = new();
         readonly Dictionary<Texture, TextureView> _autoViewsByTexture = new();
-        readonly Dictionary<IntPtr, ResourceSetInfo> _viewsById = new();
+        readonly Dictionary<nint, ResourceSetInfo> _viewsById = new();
         readonly List<IDisposable> _ownedResources = [];
 
         int _lastAssignedId = 100;
@@ -124,7 +124,7 @@ namespace Repos
         /// Gets or creates a handle for a texture to be drawn with ImGui.
         /// Pass the returned handle to Image() or ImageButton().
         /// </summary>
-        public IntPtr GetOrCreateImGuiBinding(ResourceFactory factory, TextureView textureView)
+        public nint GetOrCreateImGuiBinding(ResourceFactory factory, TextureView textureView)
         {
             if (!_setsByView.TryGetValue(textureView, out ResourceSetInfo rsi))
             {
@@ -139,13 +139,13 @@ namespace Repos
             return rsi.ImGuiBinding;
         }
 
-        IntPtr GetNextImGuiBindingId() => Interlocked.Increment(ref _lastAssignedId);
+        nint GetNextImGuiBindingId() => Interlocked.Increment(ref _lastAssignedId);
 
         /// <summary>
         /// Gets or creates a handle for a texture to be drawn with ImGui.
         /// Pass the returned handle to Image() or ImageButton().
         /// </summary>
-        public IntPtr GetOrCreateImGuiBinding(ResourceFactory factory, Texture texture)
+        public nint GetOrCreateImGuiBinding(ResourceFactory factory, Texture texture)
         {
             if (!_autoViewsByTexture.TryGetValue(texture, out TextureView? textureView))
             {
@@ -160,7 +160,7 @@ namespace Repos
         /// <summary>
         /// Retrieves the shader texture binding for the given helper handle.
         /// </summary>
-        public ResourceSet GetImageResourceSet(IntPtr imGuiBinding)
+        public ResourceSet GetImageResourceSet(nint imGuiBinding)
         {
             if (!_viewsById.TryGetValue(imGuiBinding, out ResourceSetInfo tvi))
             {
@@ -239,7 +239,7 @@ namespace Repos
 
             ImGuiIOPtr io = ImGui.GetIO();
             // Build
-            io.Fonts.GetTexDataAsRGBA32(out IntPtr pixels, out var width, out var height, out var bytesPerPixel);
+            io.Fonts.GetTexDataAsRGBA32(out nint pixels, out var width, out var height, out var bytesPerPixel);
 
             // Store our identifier
             io.Fonts.SetTexID(FontAtlasId);
@@ -479,10 +479,10 @@ namespace Repos
                 for (int i = 0; i < commandList.CmdBuffer.Size; i++)
                 {
                     ImDrawCmdPtr pcmd = commandList.CmdBuffer[i];
-                    if (pcmd.UserCallback != IntPtr.Zero)
+                    if (pcmd.UserCallback != nint.Zero)
                         throw new NotImplementedException();
 
-                    if (pcmd.TextureId != IntPtr.Zero)
+                    if (pcmd.TextureId != nint.Zero)
                     {
                         var resourceSet =
                             pcmd.TextureId == FontAtlasId
@@ -527,9 +527,9 @@ namespace Repos
                 resource.Dispose();
         }
 
-        struct ResourceSetInfo(IntPtr imGuiBinding, ResourceSet resourceSet)
+        struct ResourceSetInfo(nint imGuiBinding, ResourceSet resourceSet)
         {
-            public readonly IntPtr ImGuiBinding = imGuiBinding;
+            public readonly nint ImGuiBinding = imGuiBinding;
             public readonly ResourceSet ResourceSet = resourceSet;
         }
     }

@@ -5,7 +5,7 @@ namespace Repos.Ui;
 
 public abstract record TreeNode
 {
-    protected abstract void DrawNode();
+    protected abstract Repo? DrawNode(); // Returns selected node (if any)
 
     public static TreeNode Build(IEnumerable<Repo> repos)
     {
@@ -40,18 +40,18 @@ public abstract record TreeNode
         return root;
     }
 
-    public static void DrawTree(TreeNode tree)
+    public static Repo? DrawTree(TreeNode tree)
     {
         float textBaseWidth = ImGui.CalcTextSize("A").X;
         const ImGuiTableFlags tableFlags =
             ImGuiTableFlags.BordersV |
             ImGuiTableFlags.BordersOuterH |
             ImGuiTableFlags.Resizable |
-            ImGuiTableFlags.RowBg |
+            // ImGuiTableFlags.RowBg |
             ImGuiTableFlags.NoBordersInBody;
 
         if (!ImGui.BeginTable("tbl", 7, tableFlags))
-            return;
+            return null;
 
         ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoHide);
         ImGui.TableSetupColumn("Last Fetched", ImGuiTableColumnFlags.WidthFixed, textBaseWidth * 12.0f);
@@ -62,30 +62,37 @@ public abstract record TreeNode
         ImGui.TableSetupColumn("Staged", ImGuiTableColumnFlags.WidthFixed, textBaseWidth * 8.0f);
         ImGui.TableHeadersRow();
 
-        tree.DrawNode();
+        var result = tree.DrawNode();
 
         ImGui.EndTable();
+        return result;
     }
 
     record RepoNode(string Name, Repo Repo) : TreeNode
     {
-        protected override void DrawNode()
+        public override string ToString() => Repo.Path;
+        protected override Repo? DrawNode()
         {
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
+
             ImGui.TreeNodeEx(Name, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.NoTreePushOnOpen);
+            var result = ImGui.IsItemHovered() ? Repo : null;
             ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.LastSync);
             ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Branch);
             ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Ahead.ToString());
             ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Behind.ToString());
             ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Unstaged.ToString());
             ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Staged.ToString());
+
+            return result;
         }
     }
 
     record DirNode(string Name, params List<TreeNode> Children) : TreeNode
     {
-        protected override void DrawNode()
+        public override string ToString() => Name;
+        protected override Repo? DrawNode()
         {
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
@@ -99,13 +106,19 @@ public abstract record TreeNode
             ImGui.TableNextColumn();
             ImGui.TableNextColumn();
 
+            Repo? result = null;
             if (open)
             {
                 foreach (var child in Children)
-                    child.DrawNode();
+                {
+                    var temp = child.DrawNode();
+                    result ??= temp;
+                }
 
                 ImGui.TreePop();
             }
+
+            return result;
         }
 
         public static DirNode ConsumeSingleItemChildren(DirNode node)
