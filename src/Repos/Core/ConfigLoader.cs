@@ -14,7 +14,7 @@ public static class ConfigLoader
             Directory.CreateDirectory(dir);
 
         if (!File.Exists(path))
-            return new Config { Repos = { @"C:\Depot\bb\Repos", @"C:\Depot\bb\ualbion" } };
+            return new Config();
 
         var span = File.ReadAllBytes(path);
         return JsonSerializer.Deserialize<Config>(span.AsSpan(), Options) ?? new Config();

@@ -18,9 +18,11 @@ public class RepoManager : IDisposable
         }
     }
 
-    public RepoManager(Config config) => _repos = config.Repos.ToDictionary(x => x, x => new Repo(x));
+    public RepoManager(Config config) =>
+        _repos = config.Repos.ToDictionary(x => x, x => new Repo(x));
 
     void Dirty() => _tree = null;
+
     public void AddRepo(string path)
     {
         lock (_syncRoot)

@@ -20,12 +20,13 @@ public class Repo : IDisposable
             // TODO
         }
 
-        _status = _repo.RetrieveStatus(new StatusOptions());
+        _status = _repo?.RetrieveStatus(new StatusOptions());
     }
 
     public override string ToString() => Path;
+
     public string Path => _path;
-    public string LastSync 
+    public string LastSync
     {
         get
         {
@@ -68,25 +69,32 @@ public class Repo : IDisposable
     public string Branch => _repo.Head.FriendlyName;
     public int Ahead => _repo.Head.TrackingDetails.AheadBy ?? 0;
     public int Behind => _repo.Head.TrackingDetails.BehindBy ?? 0;
-    public int Unstaged => _status.Modified.Count() + _status.Missing.Count() + _status.Untracked.Count();
+    public int Unstaged =>
+        _status.Modified.Count() + _status.Missing.Count() + _status.Untracked.Count();
     public int Staged => _status.Staged.Count();
 
     public async Task Refresh(CancellationToken ct)
     {
-        await Task.Run(() =>
-        {
-            _status = _repo.RetrieveStatus(new StatusOptions());
-        }, ct);
+        await Task.Run(
+            () =>
+            {
+                _status = _repo.RetrieveStatus(new StatusOptions());
+            },
+            ct
+        );
     }
 
     public async Task Fetch(CancellationToken ct)
     {
-        await Task.Run(() =>
-        {
-            var remote = _repo.Network.Remotes["origin"];
-            _repo.Network.Fetch(remote.Name, remote.RefSpecs.Select(x => x.Specification));
-            _status = _repo.RetrieveStatus(new StatusOptions());
-        }, ct);
+        await Task.Run(
+            () =>
+            {
+                var remote = _repo.Network.Remotes["origin"];
+                _repo.Network.Fetch(remote.Name, remote.RefSpecs.Select(x => x.Specification));
+                _status = _repo.RetrieveStatus(new StatusOptions());
+            },
+            ct
+        );
     }
 
     public void Dispose() => _repo.Dispose();

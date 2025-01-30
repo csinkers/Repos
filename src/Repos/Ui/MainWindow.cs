@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using Repos.Core;
+using SharpFileDialog;
 using Veldrid;
 
 namespace Repos.Ui;
@@ -8,6 +9,36 @@ public class MainWindow(RepoManager repoManager)
 {
     public void Draw(Input input)
     {
+        if (ImGui.Button("Add Repo (Ctrl+A)") || input.Ctrl(Key.A))
+        {
+            var dialog = new DirectoryDialog("Select a repository");
+            dialog.Open(x =>
+            {
+                if (
+                    x.Success
+                    && Directory.Exists(x.FileName)
+                    && Directory.Exists(Path.Combine(x.FileName, ".git"))
+                )
+                {
+                    repoManager.AddRepo(x.FileName);
+                }
+            });
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button("Add All Repos in Directory (Ctrl+Shift+A)") || input.ShiftCtrl(Key.A))
+        {
+            var dialog = new DirectoryDialog("Select directory containing repos");
+            dialog.Open(x =>
+            {
+                // TODO: Add via worker thread to prevent blocking updates
+                if (x.Success && Directory.Exists(x.FileName))
+                    foreach (var dir in Directory.EnumerateDirectories(x.FileName))
+                        if (Path.Exists(Path.Combine(dir, ".git")))
+                            repoManager.AddRepo(dir);
+            });
+        }
+
         if (ImGui.Button("Refresh All (Ctrl+Shift+R)") || input.ShiftCtrl(Key.R))
             Task.Run(() => repoManager.RefreshAll(CancellationToken.None));
 
