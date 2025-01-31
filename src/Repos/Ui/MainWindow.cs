@@ -9,6 +9,8 @@ public class MainWindow(RepoManager repoManager)
 {
     public void Draw(Input input)
     {
+        ImGui.BeginDisabled(repoManager.BusyMessage != null);
+
         if (ImGui.Button("Add Repo (Ctrl+A)") || input.Ctrl(Key.A))
         {
             var dialog = new DirectoryDialog("Select a repository");
@@ -31,11 +33,8 @@ public class MainWindow(RepoManager repoManager)
             var dialog = new DirectoryDialog("Select directory containing repos");
             dialog.Open(x =>
             {
-                // TODO: Add via worker thread to prevent blocking updates
                 if (x.Success && Directory.Exists(x.FileName))
-                    foreach (var dir in Directory.EnumerateDirectories(x.FileName))
-                        if (Path.Exists(Path.Combine(dir, ".git")))
-                            repoManager.AddRepo(dir);
+                    repoManager.AddReposInDirectory(x.FileName);
             });
         }
 
@@ -47,7 +46,10 @@ public class MainWindow(RepoManager repoManager)
         if (ImGui.Button("Fetch All (Ctrl+Shift+F)") || input.ShiftCtrl(Key.F))
             Task.Run(() => repoManager.FetchAll(CancellationToken.None));
 
-        Repo? selected = TreeNode.DrawTree(repoManager.Tree);
+        ImGui.TextUnformatted(repoManager.BusyMessage ?? "");
+        ImGui.EndDisabled();
+
+        IRepo? selected = TreeNode.DrawTree(repoManager.Tree);
 
         if (selected != null)
         {

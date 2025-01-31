@@ -2,35 +2,31 @@
 
 namespace Repos.Core;
 
-public class Repo : IDisposable
+public class Repo : IRepo
 {
-    readonly string _path;
     readonly Repository _repo;
-    RepositoryStatus _status;
 
-    public Repo(string path)
+    public Repo(string path, Repository repo)
     {
-        _path = path;
-        try
-        {
-            _repo = new Repository(path);
-        }
-        catch (RepositoryNotFoundException ex)
-        {
-            // TODO
-        }
-
-        _status = _repo?.RetrieveStatus(new StatusOptions());
+        Path = path;
+        _repo = repo;
+        RefreshInner();
     }
 
     public override string ToString() => Path;
 
-    public string Path => _path;
+    public string Path { get; }
+    public string Branch { get; private set; } = "";
+    public int Ahead { get; private set; }
+    public int Behind { get; private set; }
+    public int Unstaged { get; private set; }
+    public int Staged { get; private set; }
+
     public string LastSync
     {
         get
         {
-            var fetchHeadPath = System.IO.Path.Combine(_path, ".git", "FETCH_HEAD");
+            var fetchHeadPath = System.IO.Path.Combine(Path, ".git", "FETCH_HEAD");
             var fileInfo = new FileInfo(fetchHeadPath);
             return DescribeUtcTime(fileInfo.LastWriteTimeUtc);
         }
@@ -66,22 +62,16 @@ public class Repo : IDisposable
         return $"{interval.TotalSeconds:N0} secs";
     }
 
-    public string Branch => _repo.Head.FriendlyName;
-    public int Ahead => _repo.Head.TrackingDetails.AheadBy ?? 0;
-    public int Behind => _repo.Head.TrackingDetails.BehindBy ?? 0;
-    public int Unstaged =>
-        _status.Modified.Count() + _status.Missing.Count() + _status.Untracked.Count();
-    public int Staged => _status.Staged.Count();
+    public async Task Refresh(CancellationToken ct) => await Task.Run(RefreshInner, ct);
 
-    public async Task Refresh(CancellationToken ct)
+    void RefreshInner()
     {
-        await Task.Run(
-            () =>
-            {
-                _status = _repo.RetrieveStatus(new StatusOptions());
-            },
-            ct
-        );
+        var status = _repo.RetrieveStatus(new StatusOptions());
+        Branch = _repo.Head.FriendlyName;
+        Ahead = _repo.Head.TrackingDetails.AheadBy ?? 0;
+        Behind = _repo.Head.TrackingDetails.BehindBy ?? 0;
+        Unstaged = status.Modified.Count() + status.Missing.Count() + status.Untracked.Count();
+        Staged = status.Staged.Count();
     }
 
     public async Task Fetch(CancellationToken ct)
@@ -91,7 +81,7 @@ public class Repo : IDisposable
             {
                 var remote = _repo.Network.Remotes["origin"];
                 _repo.Network.Fetch(remote.Name, remote.RefSpecs.Select(x => x.Specification));
-                _status = _repo.RetrieveStatus(new StatusOptions());
+                RefreshInner();
             },
             ct
         );

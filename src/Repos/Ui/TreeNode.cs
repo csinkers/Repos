@@ -1,13 +1,15 @@
-﻿using ImGuiNET;
+﻿using System.Diagnostics;
+using System.Numerics;
+using ImGuiNET;
 using Repos.Core;
 
 namespace Repos.Ui;
 
 public abstract record TreeNode
 {
-    protected abstract Repo? DrawNode(); // Returns selected node (if any)
+    protected abstract IRepo? DrawNode(); // Returns selected node (if any)
 
-    public static TreeNode Build(IEnumerable<Repo> repos)
+    public static TreeNode Build(IEnumerable<IRepo> repos)
     {
         var root = new DirNode("");
         foreach (var repo in repos)
@@ -40,13 +42,14 @@ public abstract record TreeNode
         return root;
     }
 
-    public static Repo? DrawTree(TreeNode tree)
+    public static IRepo? DrawTree(TreeNode tree)
     {
         float textBaseWidth = ImGui.CalcTextSize("A").X;
         const ImGuiTableFlags tableFlags =
-            ImGuiTableFlags.BordersV |
-            ImGuiTableFlags.BordersOuterH |
-            ImGuiTableFlags.Resizable |
+            ImGuiTableFlags.BordersV
+            | ImGuiTableFlags.BordersOuterH
+            | ImGuiTableFlags.Resizable
+            |
             // ImGuiTableFlags.RowBg |
             ImGuiTableFlags.NoBordersInBody;
 
@@ -54,7 +57,11 @@ public abstract record TreeNode
             return null;
 
         ImGui.TableSetupColumn("Name", ImGuiTableColumnFlags.NoHide);
-        ImGui.TableSetupColumn("Last Fetched", ImGuiTableColumnFlags.WidthFixed, textBaseWidth * 12.0f);
+        ImGui.TableSetupColumn(
+            "Last Fetched",
+            ImGuiTableColumnFlags.WidthFixed,
+            textBaseWidth * 12.0f
+        );
         ImGui.TableSetupColumn("Branch", ImGuiTableColumnFlags.WidthFixed, textBaseWidth * 12.0f);
         ImGui.TableSetupColumn("Ahead", ImGuiTableColumnFlags.WidthFixed, textBaseWidth * 8.0f);
         ImGui.TableSetupColumn("Behind", ImGuiTableColumnFlags.WidthFixed, textBaseWidth * 8.0f);
@@ -68,31 +75,79 @@ public abstract record TreeNode
         return result;
     }
 
-    record RepoNode(string Name, Repo Repo) : TreeNode
+    record RepoNode(string Name, IRepo Repo) : TreeNode
     {
         public override string ToString() => Repo.Path;
-        protected override Repo? DrawNode()
+
+        protected override IRepo? DrawNode()
         {
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
 
-            ImGui.TreeNodeEx(Name, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.NoTreePushOnOpen);
+            ImGui.PushStyleColor(ImGuiCol.Text, GetColor());
+            ImGui.TreeNodeEx(
+                Name,
+                ImGuiTreeNodeFlags.Leaf
+                    | ImGuiTreeNodeFlags.Bullet
+                    | ImGuiTreeNodeFlags.NoTreePushOnOpen
+            );
+
+            if (ImGui.IsItemClicked())
+            {
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = "lazygit",
+                    Arguments = $"-p \"{Repo.Path}\""
+                };
+
+                Process.Start(startInfo);
+            }
+
             var result = ImGui.IsItemHovered() ? Repo : null;
-            ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.LastSync);
-            ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Branch);
-            ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Ahead.ToString());
-            ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Behind.ToString());
-            ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Unstaged.ToString());
-            ImGui.TableNextColumn(); ImGui.TextUnformatted(Repo.Staged.ToString());
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(Repo.LastSync);
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(Repo.Branch);
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(Repo.Ahead.ToString());
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(Repo.Behind.ToString());
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(Repo.Unstaged.ToString());
+            ImGui.TableNextColumn();
+            ImGui.TextUnformatted(Repo.Staged.ToString());
+            ImGui.PopStyleColor();
 
             return result;
         }
+
+        Vector4 GetColor()
+        {
+            if (Repo.Unstaged > 0 || Repo.Staged > 0)
+                return new Vector4(1.0f, 0.0f, 0.0f, 1.0f); // Red
+
+            if (Repo.Behind > 0)
+                return new Vector4(1.0f, 0.5f, 0.0f, 1.0f); // Orange
+
+            if (Repo.Ahead > 0)
+                return new Vector4(0.0f, 1.0f, 0.0f, 1.0f); // Green
+
+            if (IsLastFetchTooOld())
+                return new Vector4(0.5f, 0.5f, 0.5f, 1.0f); // Grey
+
+            return new Vector4(1.0f, 1.0f, 1.0f, 1.0f); // White
+        }
+
+        bool IsLastFetchTooOld() =>
+            DateTime.TryParse(Repo.LastSync, out var lastSync)
+            && (DateTime.Now - lastSync).TotalDays > 7;
     }
 
     record DirNode(string Name, params List<TreeNode> Children) : TreeNode
     {
         public override string ToString() => Name;
-        protected override Repo? DrawNode()
+
+        protected override IRepo? DrawNode()
         {
             ImGui.TableNextRow();
             ImGui.TableNextColumn();
@@ -106,7 +161,7 @@ public abstract record TreeNode
             ImGui.TableNextColumn();
             ImGui.TableNextColumn();
 
-            Repo? result = null;
+            IRepo? result = null;
             if (open)
             {
                 foreach (var child in Children)
@@ -126,8 +181,8 @@ public abstract record TreeNode
             while (node.Children is [DirNode child])
             {
                 var name = string.IsNullOrEmpty(node.Name)
-                        ? child.Name
-                        : $"{node.Name}{Path.DirectorySeparatorChar}{child.Name}";
+                    ? child.Name
+                    : $"{node.Name}{Path.DirectorySeparatorChar}{child.Name}";
 
                 node = new DirNode(name) { Children = child.Children };
             }

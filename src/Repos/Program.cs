@@ -9,7 +9,8 @@ public static class Program
     public static void Main()
     {
         var config = ConfigLoader.Load(Constants.ConfigPath);
-        using var repoManager = new RepoManager(config);
+        var repoFactory = new RepoFactory();
+        using var repoManager = new RepoManager(config, repoFactory);
         var main = new MainWindow(repoManager);
         UiRenderer.Run(main.Draw);
     }
