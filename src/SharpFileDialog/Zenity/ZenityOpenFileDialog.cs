@@ -3,12 +3,14 @@ using System.Diagnostics;
 
 namespace SharpFileDialog.Zenity
 {
-    internal class ZenityOpenFileDialog : IOpenFileDialogBackend
+    class ZenityOpenFileDialog : IOpenFileDialogBackend
     {
+        string _title;
         readonly Process _process;
 
         public ZenityOpenFileDialog(string title)
         {
+            _title = title;
             _process = new Process();
             _process.StartInfo.FileName = "zenity";
             _process.StartInfo.Arguments = "--file-selection";

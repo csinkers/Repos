@@ -5,7 +5,7 @@ namespace SharpFileDialog.Gtk
 {
     internal class GtkDirectoryDialog : IDirectoryDialogBackend
     {
-        readonly FileChooserDialog _dialog;
+        private readonly FileChooserDialog _dialog;
 
         public GtkDirectoryDialog(string title)
         {
@@ -36,7 +36,6 @@ namespace SharpFileDialog.Gtk
             {
                 callback(new DialogResult { FileName = _dialog.Filename, Success = true });
             }
-
             _dialog.Destroy();
 
             while (Application.EventsPending())

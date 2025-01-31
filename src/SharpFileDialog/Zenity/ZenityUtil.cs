@@ -2,7 +2,7 @@
 
 namespace SharpFileDialog.Zenity
 {
-    internal static class ZenityUtil
+    internal class ZenityUtil
     {
         /// <summary>
         /// Converts our filter string to a zenity filter string

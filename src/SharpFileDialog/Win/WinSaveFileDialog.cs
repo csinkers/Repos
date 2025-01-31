@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpFileDialog.Win
 {
-    internal class WinSaveFileDialog : ISaveFileDialogBackend
+    class WinSaveFileDialog : ISaveFileDialogBackend
     {
         readonly OpenFileName _openFileName;
         public string DefaultFileName

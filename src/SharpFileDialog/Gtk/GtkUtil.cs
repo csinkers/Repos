@@ -3,7 +3,7 @@ using Gtk;
 
 namespace SharpFileDialog.Gtk
 {
-    internal struct Filter
+    struct Filter
     {
         public string Name;
         public string Pattern;

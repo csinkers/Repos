@@ -7,10 +7,16 @@ using static SharpFileDialog.Win.WinInterop;
 
 namespace SharpFileDialog.Win
 {
+    // Based on https://stackoverflow.com/a/66187224
     internal class WinDirectoryDialog : IDirectoryDialogBackend
     {
         readonly List<string> _resultPaths = new List<string>();
         readonly List<string> _resultNames = new List<string>();
+
+        public WinDirectoryDialog(string title)
+        {
+            Title = title;
+        }
 
         public void Dispose() { }
 
@@ -22,7 +28,6 @@ namespace SharpFileDialog.Win
             );
         }
 
-        // Mostly based on https://stackoverflow.com/a/66187224
         public string InputPath { get; set; }
         public bool ForceFileSystem { get; set; }
         public bool Multiselect { get; set; }
@@ -73,27 +78,19 @@ namespace SharpFileDialog.Win
             dialog.SetOptions(options);
 
             if (Title != null)
-            {
                 dialog.SetTitle(Title);
-            }
 
             if (OkButtonLabel != null)
-            {
                 dialog.SetOkButtonLabel(OkButtonLabel);
-            }
 
             if (FileNameLabel != null)
-            {
                 dialog.SetFileName(FileNameLabel);
-            }
 
             if (owner == IntPtr.Zero)
             {
                 owner = Process.GetCurrentProcess().MainWindowHandle;
                 if (owner == IntPtr.Zero)
-                {
                     owner = GetDesktopWindow();
-                }
             }
 
             var hr = dialog.Show(owner);

@@ -4,14 +4,14 @@ using System.Runtime.InteropServices;
 namespace SharpFileDialog
 {
     /// <summary>
-    /// Prompt the user to select a file to be saved via a modal dialog
+    /// Represents a dialog for saving files.
     /// </summary>
     public class SaveFileDialog : ISaveFileDialogBackend
     {
-        readonly ISaveFileDialogBackend _backend;
+        private readonly ISaveFileDialogBackend _backend;
 
         /// <summary>
-        /// The default filename
+        /// Gets or sets the default file name.
         /// </summary>
         public string DefaultFileName
         {
@@ -19,9 +19,11 @@ namespace SharpFileDialog
         }
 
         /// <summary>
-        /// Create a new modal file picker dialog with the given title
+        /// Initializes a new instance of the <see cref="SaveFileDialog"/> class.
+        /// On Windows, the native dialog is used.
+        /// On Linux, Zenity is used if available, otherwise Gtk is used.
         /// </summary>
-        /// <param name="title">The title to use (if any)</param>
+        /// <param name="title">The title of the dialog.</param>
         public SaveFileDialog(string title = null)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -42,7 +44,7 @@ namespace SharpFileDialog
         }
 
         /// <summary>
-        /// Clean up any resources owned by the dialog
+        /// Releases all resources used by the <see cref="SaveFileDialog"/>.
         /// </summary>
         public void Dispose()
         {
@@ -50,10 +52,10 @@ namespace SharpFileDialog
         }
 
         /// <summary>
-        /// Displays the dialog
+        /// Opens the save file dialog.
         /// </summary>
-        /// <param name="callback">The method to call when the dialog completes</param>
-        /// <param name="filter">The filter(s) to use</param>
+        /// <param name="callback">The callback to be invoked when the dialog is closed.</param>
+        /// <param name="filter">The filter for the types of files to be displayed.</param>
         public void Save(Action<DialogResult> callback, string filter = "All files(*.*) | *.*")
         {
             _backend.Save(callback, filter);

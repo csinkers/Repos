@@ -1,17 +1,17 @@
 ﻿namespace SharpFileDialog
 {
     /// <summary>
-    /// Contains the results from a file dialog
+    /// The result of a file/directory selection dialog
     /// </summary>
     public struct DialogResult
     {
         /// <summary>
-        /// The selected filename if the dialog was successful
+        /// The path to the file or directory chosen
         /// </summary>
         public string FileName { get; set; }
 
         /// <summary>
-        /// True if the dialog was successful
+        /// True if a file or directory was chosen, false if the dialog was cancelled or an error was encountered.
         /// </summary>
         public bool Success { get; set; }
     }

@@ -4,16 +4,18 @@ using System.Runtime.InteropServices;
 namespace SharpFileDialog
 {
     /// <summary>
-    /// Prompt the user to select a file via a modal dialog
+    /// Represents a dialog for opening files.
     /// </summary>
     public class OpenFileDialog : IOpenFileDialogBackend
     {
-        readonly IOpenFileDialogBackend _backend;
+        private readonly IOpenFileDialogBackend _backend;
 
         /// <summary>
-        /// Create a new modal file picker dialog with the given title
+        /// Initializes a new instance of the <see cref="OpenFileDialog"/> class.
+        /// On Windows, the native dialog is used.
+        /// On Linux, Zenity is used if available, otherwise Gtk is used.
         /// </summary>
-        /// <param name="title">The title to use (if any)</param>
+        /// <param name="title">The title of the dialog.</param>
         public OpenFileDialog(string title = null)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -34,7 +36,7 @@ namespace SharpFileDialog
         }
 
         /// <summary>
-        /// Clean up any resources owned by the dialog
+        /// Releases all resources used by the <see cref="OpenFileDialog"/>.
         /// </summary>
         public void Dispose()
         {
@@ -42,10 +44,10 @@ namespace SharpFileDialog
         }
 
         /// <summary>
-        /// Displays the dialog
+        /// Opens the file dialog.
         /// </summary>
-        /// <param name="callback">The method to call when the dialog completes</param>
-        /// <param name="filter">The filter(s) to use</param>
+        /// <param name="callback">The callback to be invoked when the dialog is closed.</param>
+        /// <param name="filter">The filter for the types of files to be displayed.</param>
         public void Open(Action<DialogResult> callback, string filter = "All files(*.*) | *.*")
         {
             _backend.Open(callback, filter);

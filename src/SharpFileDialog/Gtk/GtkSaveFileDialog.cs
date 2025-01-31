@@ -5,7 +5,7 @@ namespace SharpFileDialog.Gtk
 {
     internal class GtkSaveFileDialog : ISaveFileDialogBackend
     {
-        readonly FileChooserDialog _dialog;
+        private readonly FileChooserDialog _dialog;
 
         public string DefaultFileName
         {

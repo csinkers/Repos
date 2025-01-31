@@ -3,8 +3,9 @@ using System.Diagnostics;
 
 namespace SharpFileDialog.Zenity
 {
-    internal class ZenitySaveFileDialog : ISaveFileDialogBackend
+    class ZenitySaveFileDialog : ISaveFileDialogBackend
     {
+        string _title;
         readonly Process _process;
         public string DefaultFileName
         {
@@ -13,6 +14,7 @@ namespace SharpFileDialog.Zenity
 
         public ZenitySaveFileDialog(string title)
         {
+            _title = title;
             _process = new Process();
             _process.StartInfo.FileName = "zenity";
             _process.StartInfo.RedirectStandardOutput = true;

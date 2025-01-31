@@ -3,12 +3,14 @@ using System.Diagnostics;
 
 namespace SharpFileDialog.Zenity
 {
-    internal class ZenityDirectoryDialog : IDirectoryDialogBackend
+    class ZenityDirectoryDialog : IDirectoryDialogBackend
     {
+        string _title;
         readonly Process _process;
 
         public ZenityDirectoryDialog(string title)
         {
+            _title = title;
             _process = new Process();
             _process.StartInfo.FileName = "zenity";
             _process.StartInfo.Arguments = "--file-selection --directory";
