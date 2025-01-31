@@ -1,11 +1,10 @@
-﻿using Terminal.Gui;
+﻿using Repos.Core;
 
 namespace Repos.Ui;
 
-public sealed class ContentView : View
+public sealed class ContentView
 {
     /*
-
     General:
     Rounded borders
     Black background
@@ -53,15 +52,23 @@ public sealed class ContentView : View
     3: Details
 
     */
-    public ContentView(IRepoManager manager)
+    /*
+    level1 = search path
+    level2 = repo dir names
+
+    up/down - navigate tree
+    left/right - switch pane
+    space - toggle node expansion status
+    n - add search path
+    d - remove search path/repo
+    i - toggle showing ignored repos
+    f - fetch selected repo
+    F - fetch all repos
+    r - refresh selected repo
+    R - refresh all repos
+    */
+    public ContentView(RepoManager manager)
     {
-        var repoPane = new RepoView(manager)
-        {
-            Height = Dim.Fill(),
-            Width = Dim.Fill(),
-            BorderStyle = LineStyle.Rounded,
-        };
-        Add(repoPane);
 /*
         var branchPane = new BranchView(repoPane)
         {

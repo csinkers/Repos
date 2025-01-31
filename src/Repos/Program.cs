@@ -1,19 +1,17 @@
 ﻿using Repos.Core;
 using Repos.Ui;
-using Terminal.Gui;
 
 namespace Repos;
 
 public static class Program
 {
+    [STAThread]
     public static void Main()
     {
-        Application.Init();
-
-        IRepoManager repoManager = new RepoManager();
-        using (var window = new MainWindow(repoManager))
-            Application.Run(window);
-
-        Application.Shutdown();
+        var config = ConfigLoader.Load(Constants.ConfigPath);
+        var repoFactory = new RepoFactory();
+        using var repoManager = new RepoManager(config, repoFactory);
+        var main = new MainWindow(repoManager);
+        UiRenderer.Run(main.Draw);
     }
 }

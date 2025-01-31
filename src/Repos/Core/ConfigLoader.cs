@@ -5,7 +5,7 @@ namespace Repos.Core;
 
 public static class ConfigLoader
 {
-    static readonly JsonSerializerOptions _options = new() { WriteIndented = true };
+    static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
 
     public static Config Load(string path)
     {
@@ -14,10 +14,10 @@ public static class ConfigLoader
             Directory.CreateDirectory(dir);
 
         if (!File.Exists(path))
-            return new Config { Repos = { @"C:\Depot\bb\Repos", @"C:\Depot\bb\ualbion" } };
+            return new Config();
 
         var span = File.ReadAllBytes(path);
-        return JsonSerializer.Deserialize<Config>(span.AsSpan(), _options) ?? new Config();
+        return JsonSerializer.Deserialize<Config>(span.AsSpan(), Options) ?? new Config();
     }
 
     public static void Save(Config config, string path)
@@ -26,6 +26,6 @@ public static class ConfigLoader
         if (!string.IsNullOrEmpty(dir))
             Directory.CreateDirectory(dir);
 
-        File.WriteAllText(path, JsonSerializer.Serialize(config, _options));
+        File.WriteAllText(path, JsonSerializer.Serialize(config, Options));
     }
 }

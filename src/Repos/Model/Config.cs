@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Repos.Model;
 
 public class Config
 {
     [JsonPropertyName("repos")]
-    public ObservableCollection<string> Repos { get; } = new();
+    public List<string> Repos { get; set; } = new();
 }
