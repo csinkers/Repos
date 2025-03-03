@@ -13,7 +13,11 @@ public class RepoFactory
         }
         catch (RepositoryNotFoundException)
         {
-            return new MissingRepo(path);
+            return new MissingRepo(path, "repo not found");
+        }
+        catch (LibGit2SharpException ex)
+        {
+            return new MissingRepo(path, ex.Message);
         }
     }
 }

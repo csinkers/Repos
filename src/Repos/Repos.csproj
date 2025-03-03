@@ -35,8 +35,4 @@
     <EmbeddedResource Include="Shaders/Metal/imgui-vertex.metallib" LogicalName="imgui-vertex.metallib" />
     <EmbeddedResource Include="Shaders/Metal/imgui-frag.metallib" LogicalName="imgui-frag.metallib" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SharpFileDialog\SharpFileDialog.csproj" />
-  </ItemGroup>
 </Project>

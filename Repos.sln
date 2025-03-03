@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repos", "src\Repos\Repos.csproj", "{1F724D22-5828-4FAF-B0BF-A7510C943450}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veldrid", "..\veldrid\src\Veldrid\Veldrid.csproj", "{FED6EC91-048B-41D9-93D3-9C7FCAAA038B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veldrid.StartupUtilities", "..\veldrid\src\Veldrid.StartupUtilities\Veldrid.StartupUtilities.csproj", "{0F905866-978A-4B30-B81C-C24E97624874}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veldrid.SDL2", "..\veldrid\src\Veldrid.SDL2\Veldrid.SDL2.csproj", "{4259F45C-2C73-45D2-B677-90F433F5D5CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veldrid.MetalBindings", "..\veldrid\src\Veldrid.MetalBindings\Veldrid.MetalBindings.csproj", "{B93ADFF3-0421-4782-AFBE-495D53D96314}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Veldrid.OpenGLBindings", "..\veldrid\src\Veldrid.OpenGLBindings\Veldrid.OpenGLBindings.csproj", "{A47966BC-76AD-4E26-B138-64E3A0023BA8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F724D22-5828-4FAF-B0BF-A7510C943450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F724D22-5828-4FAF-B0BF-A7510C943450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F724D22-5828-4FAF-B0BF-A7510C943450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F724D22-5828-4FAF-B0BF-A7510C943450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FED6EC91-048B-41D9-93D3-9C7FCAAA038B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FED6EC91-048B-41D9-93D3-9C7FCAAA038B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FED6EC91-048B-41D9-93D3-9C7FCAAA038B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FED6EC91-048B-41D9-93D3-9C7FCAAA038B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F905866-978A-4B30-B81C-C24E97624874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F905866-978A-4B30-B81C-C24E97624874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F905866-978A-4B30-B81C-C24E97624874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F905866-978A-4B30-B81C-C24E97624874}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4259F45C-2C73-45D2-B677-90F433F5D5CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4259F45C-2C73-45D2-B677-90F433F5D5CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4259F45C-2C73-45D2-B677-90F433F5D5CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4259F45C-2C73-45D2-B677-90F433F5D5CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B93ADFF3-0421-4782-AFBE-495D53D96314}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B93ADFF3-0421-4782-AFBE-495D53D96314}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B93ADFF3-0421-4782-AFBE-495D53D96314}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B93ADFF3-0421-4782-AFBE-495D53D96314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A47966BC-76AD-4E26-B138-64E3A0023BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A47966BC-76AD-4E26-B138-64E3A0023BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A47966BC-76AD-4E26-B138-64E3A0023BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A47966BC-76AD-4E26-B138-64E3A0023BA8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02394EF3-22BA-451A-8D75-270E2A3DB99B}
+	EndGlobalSection
+EndGlobal
